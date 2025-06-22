@@ -74,11 +74,7 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {
-    categories: {
-      subcategories: 'categories';
-    };
-  };
+  collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -162,14 +158,8 @@ export interface Media {
 export interface Category {
   id: string;
   name: string;
-  slug: string;
-  color?: string | null;
-  parent?: (string | null) | Category;
-  subcategories?: {
-    docs?: (string | Category)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
+  description?: string | null;
+  image?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -273,10 +263,8 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   name?: T;
-  slug?: T;
-  color?: T;
-  parent?: T;
-  subcategories?: T;
+  description?: T;
+  image?: T;
   updatedAt?: T;
   createdAt?: T;
 }
