@@ -21,8 +21,9 @@ interface Props {
 export const CategoriesSidebar = (props: Props) => {
   const { open, onOpenChange } = props;
 
-  const [parentCategories, setParentCategories] =
-    useState<CategoriesGetManyOuput | null>(null);
+  const [parentCategories, setParentCategories] = useState<
+    CategoriesGetManyOuput[0]["subcategories"] | null
+  >(null);
   const [selectedCategory, setSelectedCategory] = useState<
     CategoriesGetManyOuput[0] | null
   >(null);
@@ -46,10 +47,18 @@ export const CategoriesSidebar = (props: Props) => {
     }
   };
 
-  const handleCategoryClick = (category: CategoriesGetManyOuput[0]) => {
-    if (category.subcategories.length > 0) {
-      setParentCategories(category.subcategories as CategoriesGetManyOuput);
-      setSelectedCategory(category);
+  const handleCategoryClick = (
+    category:
+      | CategoriesGetManyOuput[0]
+      | CategoriesGetManyOuput[0]["subcategories"][0]
+  ) => {
+    if (
+      "subcategories" in category &&
+      category.subcategories &&
+      category.subcategories.length > 0
+    ) {
+      setParentCategories(category.subcategories);
+      setSelectedCategory(category as CategoriesGetManyOuput[0]);
     } else {
       if (parentCategories && selectedCategory) {
         router.push(`/${selectedCategory!.slug}/${category.slug}`);
