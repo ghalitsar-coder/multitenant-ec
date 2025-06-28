@@ -27,5 +27,5 @@ export const baseProcedure = t.procedure.use(async ({ next }) => {
   const payload = await getPayload({
     config,
   });
-  return next({ ctx: { payload } });
+  return next({ ctx: { db: payload } });
 });
