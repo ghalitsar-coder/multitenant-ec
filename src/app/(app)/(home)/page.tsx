@@ -3,7 +3,7 @@
 // import { getQueryClient, trpc } from "@/trpc/server";
 
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 // CLIENT COMPONENT
 
@@ -14,11 +14,9 @@ const Home = () => {
   //   trpc.categories.getMany.queryOptions()
   // );
 
-  // ** CLIENT SIDE 
+  // ** CLIENT SIDE
   const trpc = useTRPC();
-  const { data, isLoading } = useSuspenseQuery(
-    trpc.categories.getMany.queryOptions()
-  );
+  const { data, isLoading } = useQuery(trpc.auth.session.queryOptions());
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
