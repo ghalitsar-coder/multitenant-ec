@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTRPC } from "@/trpc/client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -29,16 +29,46 @@ const poppins = Poppins({
 export const SignInView = () => {
   const router = useRouter();
   const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
   const login = useMutation(
     trpc.auth.login.mutationOptions({
       onError(error) {
         toast.error(error.message);
       },
-      onSuccess() {
+      async onSuccess() {
+        await queryClient.invalidateQueries(trpc.auth.session.queryFilter());
         router.push("/");
       },
     })
   );
+
+  // can do it like this
+  // const login = useMutation({
+  //   mutationFn: async (values: z.infer<typeof loginSchema>) => {
+  //     const response = await fetch(`/api/users/login`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+
+  //       body: JSON.stringify(values),
+  //     });
+
+  //     if (!response.ok) {
+  //       const error = await response.json();
+  //       throw new Error(error.message || "Login Failed");
+  //     }
+
+  //     return response.json();
+  //   },
+  //   onError(error) {
+  //     toast.error(error.message);
+  //   },
+  //   onSuccess() {
+  //     router.push("/");
+  //   },
+  // });
 
   const form = useForm<z.infer<typeof loginSchema>>({
     mode: "all",
